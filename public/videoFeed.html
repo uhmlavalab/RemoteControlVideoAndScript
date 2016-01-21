@@ -1,0 +1,77 @@
+<style>
+.grayscale {
+  filter: grayscale(1);
+}
+.sepia {
+  filter: sepia(1);
+}
+.blur {
+  filter: blur(3px);
+}
+</style>
+
+<div>
+Change video class values to alter filter. Only last one takes effect.<br>
+https://developer.mozilla.org/en-US/docs/Web/CSS/filter<br>
+http://www.html5rocks.com/en/tutorials/getusermedia/intro/<br>
+For sending image data over websocket try search for websocket image sending or sending binary data over websocket. This seems to involve sending a text conversion because websockets only take text data. However this might mean the data gets inflated. Streaming seems to be a different sort of handling entirely.
+
+</div>
+
+<video autoplay class="none" style="display:none"></video>
+<img src="">
+<canvas style="display:none;" width="1000" height="1000"></canvas>
+
+<script>
+	var video = document.querySelector('video');
+	var canvas = document.querySelector('canvas');
+	var ctx = canvas.getContext('2d');
+	var localMediaStream = null;
+
+	var imageHistory = [];
+	var currentImage = 0;
+
+
+	function snapshot() {
+		if (localMediaStream) {
+		  ctx.drawImage(video, 0, 0);
+		  // "image/webp" works in Chrome.
+		  // Other browsers will fall back to image/png.
+		  document.querySelector('img').src = canvas.toDataURL('image/webp');
+
+		  imageHistory.push( document.querySelector('img').src ) ;
+		  console.log( "Saving image history type " + (typeof imageHistory[ imageHistory.length -1 ]) );
+		}
+	} //end snapshot
+
+	function cycle(e) {
+		if( e.key === "a" ) {
+			currentImage--;
+			if(currentImage < 0) { currentImage = imageHistory.length -1; }
+
+		}
+		else if ( e.key === "d" ) {
+			currentImage++;
+			if(currentImage >= imageHistory.length) { currentImage = 0; }
+		}
+
+		document.querySelector('img').src = imageHistory[currentImage];
+	}
+
+	document.addEventListener('click', snapshot, false);
+	document.addEventListener('keydown', cycle, false);
+
+	navigator.getUserMedia  = navigator.getUserMedia ||
+	                      navigator.webkitGetUserMedia ||
+	                      navigator.mozGetUserMedia ||
+	                      navigator.msGetUserMedia;
+
+	navigator.getUserMedia(
+		{video: true},
+		function(stream) {
+			video.src = window.URL.createObjectURL(stream);
+			localMediaStream = stream;
+		},
+		function(e) { console.log('Didnt work', e); }
+	);
+</script>
