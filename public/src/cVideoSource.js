@@ -38,7 +38,7 @@ function setupListeners() {
 
 		console.log("Camera set to stream beginning send to server loop.");
 
-		setInterval(sendPicture, 50); //send a picture with ms delay between sends.
+		setInterval(sendPicture, 500); //send a picture with ms delay between sends.
 	});
 }
 

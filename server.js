@@ -8,6 +8,8 @@ var WebSocketIO		= require('websocketio');
 var httpServer   	= require('./src/httpServer');
 var utils			= require('./src/utils');
 var gcSetup 		= require('./src/globalsAndConstants');
+var scriptExecutionFunction		= require('./src/script').Script;
+var commandExecutionFunction	= require('./src/script').Command;
 
 //---------------------------------------------------------------------------WebServer variables
 var webVars			= {};
@@ -115,6 +117,8 @@ When receiving a packet of the named type, call the function.
 function setupListeners(wsio) {
 	wsio.on('consoleLog',				wsConsoleLog); //basic tester packet
 	wsio.on('videoSourceImageToServer', wsVideoSourceImageToServer); //pass images to all other clients.
+	wsio.on('runScriptOnServer', 		wsRunScriptOnServer);
+	wsio.on('runCommandOnServer', 		wsRunCommandOnServer);
 } //end setupListeners
 
 function wsConsoleLog(wsio, data) {
@@ -131,8 +135,20 @@ function wsVideoSourceImageToServer(wsio, data) {
 	
 }
 
+function wsRunScriptOnServer(wsio, data) {
+	utils.consolePrint( "Command to run script:" + data.script );
+	if ( utils.doesFileExist(data.script) ) {
+		scriptExecutionFunction( data.script );
+	}
+	else {
+		utils.consolePrint( "   ^ Error: specified script doesn't exist, unable to run script." );
+	}
+}
 
-
+function wsRunCommandOnServer(wsio, data) {
+	utils.consolePrint( "Command to run command:" + data.command );
+	commandExecutionFunction( data.command );
+}
 
 
 

@@ -25,6 +25,8 @@ function consolePrint(stringToPrint) {
 
 	//this will be filled with other things later. Like actual file logging when I get around to it.
 
+	//also option to make color text.
+
 	console.log(stringToPrint);
 }
 

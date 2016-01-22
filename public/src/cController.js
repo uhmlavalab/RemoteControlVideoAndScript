@@ -46,3 +46,26 @@ function wsServerSendingImageToControllers(data) {
 } //end wsServerSendingImageToControllers
 
 
+//--------------------------------------------------------------------------------------------------------------------------
+function tellServerRunScript() {
+
+	wsio.emit('runScriptOnServer', { "script" : "does not exist, what happens?"});
+
+}
+
+function tellServerRunCommand() {
+
+	wsio.emit('runCommandOnServer', { "command" : "ls" });
+
+}
+
+
+
+
+
+
+
+
+
+
+
