@@ -17,7 +17,8 @@ var webVars			= {};
 	webVars.wsioServer 	= null;
 	webVars.clients 	= []; //used to contain the wsio connections
 
-var clientData		= []; //any additional data as necessary for clients.
+var clientVideoSources		= [];
+var clientControllers		= [];
 
 //---------------------------------------------------------------------------debug options setup
 gcSetup.initialize(); //check the file for specific debug options.
@@ -94,6 +95,15 @@ Additional effects may be needed, again depending on the services.
 function wsAddClient(wsio, data) {
 	utils.debugPrint('addClient packet received', "wsio");
 
+	if(data.type === "videoSource") {
+		utils.debugPrint('    adding a videoSource client', "wsio");
+		clientVideoSources.push(wsio);
+	}
+	else if (data.type === "controller") {
+		utils.debugPrint('    adding a controller client', "wsio");
+		clientControllers.push(wsio);
+	}
+
 	webVars.clients.push(wsio); 		//Good to remember who is connected.
 	setupListeners(wsio); 				//setup the other wsio packets necessary for the services.
 	wsio.emit('serverAccepted', {} ); 	//generally need to confirm that the server OK'd the wsio connection
@@ -104,6 +114,7 @@ When receiving a packet of the named type, call the function.
 */
 function setupListeners(wsio) {
 	wsio.on('consoleLog',				wsConsoleLog); //basic tester packet
+	wsio.on('videoSourceImageToServer', wsVideoSourceImageToServer); //pass images to all other clients.
 } //end setupListeners
 
 function wsConsoleLog(wsio, data) {
@@ -111,5 +122,23 @@ function wsConsoleLog(wsio, data) {
 	data.message = "Server confirms:" + data.message;
 	wsio.emit('serverConfirmCL', data);
 }
+
+function wsVideoSourceImageToServer(wsio, data) {
+
+	for(var i = 0; i < clientControllers.length; i++) {
+		clientControllers[i].emit("serverSendingImageToControllers", {"image": data.image});
+	}
+	
+}
+
+
+
+
+
+
+
+
+
+
 
 

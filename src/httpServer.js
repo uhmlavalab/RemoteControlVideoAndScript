@@ -43,8 +43,14 @@ HttpServer.prototype.onreq = function(req, res) {
 		var requestPath = this.publicDirectory + getName;
 		utils.debugPrint("full request path:" + requestPath, "http");
 
-		//get information about the requested path item. (ie: is it a folder, file, etc.)
-		var stats = fs.lstatSync(requestPath);
+		var stats;
+		if( utils.doesFileExist(requestPath) ) {
+			//get information about the requested path item. (ie: is it a folder, file, etc.)
+			stats = fs.lstatSync(requestPath);
+		}
+		else {
+			stats = null;
+		}
 		if(stats != null) {
 			if (stats.isDirectory()) {
 				this.redirect(res, getName+"/index.html"); //prevent directory snooping
