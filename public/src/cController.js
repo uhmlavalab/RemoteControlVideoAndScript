@@ -59,7 +59,17 @@ function tellServerRunCommand() {
 
 }
 
+function tellServerOff1000 () {  wsio.emit('runCommandOnServer', { "command" : "scripts\\keypass.ahk q" });  }
+function tellServerOff0100 () {  wsio.emit('runCommandOnServer', { "command" : "scripts\\keypass.ahk w" });  }
+function tellServerOff0010 () {  wsio.emit('runCommandOnServer', { "command" : "scripts\\keypass.ahk e" });  }
+function tellServerOff0001 () {  wsio.emit('runCommandOnServer', { "command" : "scripts\\keypass.ahk r" });  }
 
+
+
+function tellServerOn1000 () {  wsio.emit('runCommandOnServer', { "command" : "scripts\\keypass.ahk a" });  }
+function tellServerOn0100 () {  wsio.emit('runCommandOnServer', { "command" : "scripts\\keypass.ahk s" });  }
+function tellServerOn0010 () {  wsio.emit('runCommandOnServer', { "command" : "scripts\\keypass.ahk d" });  }
+function tellServerOn0001 () {  wsio.emit('runCommandOnServer', { "command" : "scripts\\keypass.ahk f" });  }
 
 
 

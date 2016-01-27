@@ -4,4 +4,4 @@ if 0 = 0
 }
 
 Send %1%
-Send enter 
+Send {enter} 
